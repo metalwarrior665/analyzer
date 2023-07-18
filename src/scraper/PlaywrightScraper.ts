@@ -8,6 +8,7 @@ import { parseHtml } from '../parsing/htmlParser';
 import { ScrapedData, NormalizedKeywordPair, ParsedRequestResponse } from '../types';
 import { scrapeWindowProperties } from "../parsing/window-properties";
 import { KeyValueStore, log } from '@crawlee/core';
+import { launchPlaywright } from 'crawlee';
 import { prettyPrint } from "html";
 import { Request } from "playwright";
 import { PlaywrightProxyConfiguration } from '../helpers/proxy';
@@ -101,7 +102,7 @@ export class PlaywrightScraper {
                 log.error(e);
                 scrapedData.scrapingFinished = false;
             }
-            
+
             // xhr requests are parsed  on "response" event and added to this.request object
             scrapedData.xhrParsed = this.requests;
             scrapedData.scrapingFinished = true;
@@ -123,10 +124,12 @@ export class PlaywrightScraper {
      */
     async openBrowser(proxyConf: PlaywrightProxyConfiguration | undefined, generateFingeprint: boolean): Promise<BrowserContext> {
         // open chromium browser
-        const browser = await chromium.launch({
-            headless: false,
-            proxy: proxyConf,
-            devtools: true
+        const browser = await launchPlaywright({
+            launchOptions: {
+                headless: false,
+                devtools: true
+            }
+            // proxyUrl: proxyConf,
         });
 
         // open new tab
@@ -258,7 +261,7 @@ export class PlaywrightScraper {
         const context = await browser.newContext({
             userAgent: fingerprint.fingerprint.navigator.userAgent,
             locale: fingerprint.fingerprint.navigator.language,
-            viewport:{width: 2560, height: 1440} ,
+            viewport: { width: 2560, height: 1440 },
             ignoreHTTPSErrors: true
         });
 
