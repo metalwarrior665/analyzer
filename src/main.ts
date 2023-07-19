@@ -177,7 +177,7 @@ export async function analyze(inputString: string | undefined = undefined): Prom
         // save the run to the runs key value store
         if (saveRunAsFolder) {
             try {
-                const store = await Actor.openKeyValueStore(`runs/${dayjs(new Date()).format('YYYY-MM-DD-HH-mm-ss')}`);
+                const store = await Actor.openKeyValueStore(`WEB-PAGE-ANALYZER-${dayjs(new Date()).format('YYYY-MM-DD-HH-mm-ss')}`);
                 await store.setValue("INPUT", JSON.stringify(input!), { contentType: "application/json; charset=utf-8" });
                 await store.setValue("OUTPUT", JSON.stringify(output!, null, 2), { contentType: 'application/json; charset=utf-8' });
                 await store.setValue("DASHBOARD", readFileSync("./src/static/index.html"), { contentType: 'text/html; charset=utf-8' });
