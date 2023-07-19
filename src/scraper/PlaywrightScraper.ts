@@ -126,7 +126,8 @@ export class PlaywrightScraper {
         const browser = await chromium.launch({
             headless: false,
             proxy: proxyConf,
-            devtools: true
+            devtools: true,
+            executablePath: process.env.APIFY_CHROME_EXECUTABLE_PATH || undefined,
         });
 
         // open new tab
